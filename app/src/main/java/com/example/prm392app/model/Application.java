@@ -12,7 +12,6 @@ public class Application {
     private String address; // Địa chỉ nơi ở (rút gọn)
     private String companyName; // Tên công ty/tổ chức tuyển dụng
     private String department; // Phòng ban tuyển dụng (tùy chọn)
-    private String recipientTitle; // Chức danh người nhận (tùy chọn)
     private String applicationTitle; // Tiêu đề đơn (ví dụ: ĐƠN XIN VIỆC)
     private String introduction; // Lời mở đầu (lý do viết đơn, nguồn thông tin, vị trí ứng tuyển)
     private String personalSummary; // Trình bày ngắn gọn về bản thân (học vấn, kỹ năng, kinh nghiệm)
@@ -26,7 +25,7 @@ public class Application {
 
     public Application(String applicationId, String studentId, String internshipId, String fullName, String dateOfBirth,
                        String phoneNumber, String email, String address, String companyName, String department,
-                       String recipientTitle, String applicationTitle, String introduction, String personalSummary,
+                       String applicationTitle, String introduction, String personalSummary,
                        String motivation, String commitment, String applicationDate, String status, long appliedAt) {
         this.applicationId = applicationId;
         this.studentId = studentId;
@@ -38,7 +37,7 @@ public class Application {
         this.address = address;
         this.companyName = companyName;
         this.department = department;
-        this.recipientTitle = recipientTitle;
+
         this.applicationTitle = applicationTitle;
         this.introduction = introduction;
         this.personalSummary = personalSummary;
@@ -69,8 +68,7 @@ public class Application {
     public void setCompanyName(String companyName) { this.companyName = companyName; }
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
-    public String getRecipientTitle() { return recipientTitle; }
-    public void setRecipientTitle(String recipientTitle) { this.recipientTitle = recipientTitle; }
+
     public String getApplicationTitle() { return applicationTitle; }
     public void setApplicationTitle(String applicationTitle) { this.applicationTitle = applicationTitle; }
     public String getIntroduction() { return introduction; }

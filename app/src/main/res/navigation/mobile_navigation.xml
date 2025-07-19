@@ -12,7 +12,13 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_home_to_internship_details"
-            app:destination="@id/internshipDetailsFragment" />
+            app:destination="@id/internshipDetailsFragment"
+            app:popUpTo="@id/navigation_home"
+            app:launchSingleTop="true">
+            <argument
+                android:name="internship_id"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -37,5 +43,9 @@
         android:id="@+id/internshipDetailsFragment"
         android:name="com.example.prm392app.ui.internships.InternshipDetailsFragment"
         android:label="Chi tiết thực tập"
-        tools:layout="@layout/fragment_internship_details" />
+        tools:layout="@layout/fragment_internship_details">
+        <argument
+            android:name="internship_id"
+            app:argType="string" />
+    </fragment>
 </navigation>

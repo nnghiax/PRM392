@@ -1,5 +1,5 @@
 
-package com.example.prm392app.ui.internships;
+        package com.example.prm392app.ui.internships;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -152,7 +152,6 @@ public class InternshipDetailsFragment extends Fragment {
                 address,
                 companyName,
                 null, // department (tùy chọn)
-                null, // recipientTitle (tùy chọn)
                 "ĐƠN XIN VIỆC", // applicationTitle (cố định, có thể cho nhập nếu cần)
                 introduction,
                 personalSummary,
