@@ -36,12 +36,24 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
+    // Firebase dependencies
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-storage")
 
+    implementation("com.google.firebase:firebase-database")
+
+    implementation("com.google.firebase:firebase-firestore") // Cho Firestore
+    implementation("com.google.firebase:firebase-auth") // Cho Authentication
+    implementation("com.google.firebase:firebase-storage") // Cho Storage (tải file PDF)
+    // Nếu không dùng Realtime Database thì bỏ dòng dưới
+    // implementation("com.google.firebase:firebase-database")
+
+
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+
+
+    // AndroidX dependencies
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -49,7 +61,13 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+
     implementation(libs.recyclerview)
+
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
