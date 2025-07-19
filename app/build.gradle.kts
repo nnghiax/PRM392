@@ -1,6 +1,7 @@
+
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services") version "4.4.3" apply false
+    id("com.google.gms.google-services") // Áp dụng plugin ở cấp ứng dụng
 }
 
 android {
@@ -13,7 +14,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -36,22 +36,17 @@ android {
 }
 
 dependencies {
-    // Firebase dependencies
+    // Firebase dependencies with BoM
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore") // Firestore
+    implementation("com.google.firebase:firebase-auth") // Authentication
+    implementation("com.google.firebase:firebase-storage") // Storage
+    implementation("com.google.firebase:firebase-database") // Realtime Database (nếu cần)
 
-    implementation("com.google.firebase:firebase-database")
-
-    implementation("com.google.firebase:firebase-firestore") // Cho Firestore
-    implementation("com.google.firebase:firebase-auth") // Cho Authentication
-    implementation("com.google.firebase:firebase-storage") // Cho Storage (tải file PDF)
-    // Nếu không dùng Realtime Database thì bỏ dòng dưới
-    // implementation("com.google.firebase:firebase-database")
-
-
+    // Navigation dependencies (loại bỏ trùng lặp)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-
 
     // AndroidX dependencies
     implementation(libs.appcompat)
@@ -59,17 +54,14 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.navigation.fragment)
-    implementation(libs.navigation.ui)
+    implementation(libs.recyclerview) // Sử dụng catalog thay vì version cụ thể
 
-    implementation(libs.recyclerview)
-
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.cardview:cardview:1.0.0")
+    // Loại bỏ các dòng trùng lặp hoặc không cần thiết
+    // implementation("androidx.recyclerview:recyclerview:1.3.2") // Đã thay bằng libs.recyclerview
+    // implementation("androidx.cardview:cardview:1.0.0") // Thêm lại nếu cần CardView
 
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
 }
