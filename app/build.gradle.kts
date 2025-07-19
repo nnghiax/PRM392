@@ -1,7 +1,9 @@
 
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services") // Áp dụng plugin ở cấp ứng dụng
+
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -39,10 +41,12 @@ dependencies {
     // Firebase dependencies with BoM
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
+
     implementation("com.google.firebase:firebase-firestore") // Firestore
     implementation("com.google.firebase:firebase-auth") // Authentication
     implementation("com.google.firebase:firebase-storage") // Storage
     implementation("com.google.firebase:firebase-database") // Realtime Database (nếu cần)
+
 
     // Navigation dependencies (loại bỏ trùng lặp)
     implementation(libs.navigation.fragment)
@@ -64,4 +68,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }
+

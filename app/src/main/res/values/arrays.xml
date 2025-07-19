@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <array name="field_options">
         <item>Tất cả</item>
         <item>IT</item>
         <item>Marketing</item>
         <item>Tài chính</item>
     </array>
+
+    <string-array name="user_types">
+        <item>student</item>
+        <item>recruiter</item>
+    </string-array>
+
 </resources>
