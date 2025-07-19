@@ -1,40 +1,32 @@
+
 package com.example.prm392app.ui.internships;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.example.prm392app.R;
 import com.example.prm392app.model.Application;
 import com.example.prm392app.model.Internship;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class InternshipDetailsFragment extends Fragment {
+    private static final String TAG = "InternshipDetailsFragment";
     private TextView textJobTitle, textCompanyName, textDescription, textRequirements, textStipend, textDeadline, textApplicationStatus;
-    private Button buttonApply;
+    private EditText editFullName, editPhoneNumber, editEmail, editAddress, editIntroduction, editPersonalSummary, editMotivation, editCommitment;
+    private Button buttonSubmitApplication;
     private FirebaseFirestore db;
-    private StorageReference storageRef;
     private String internshipId;
-    private ActivityResultLauncher<Intent> resumeLauncher;
-    private ActivityResultLauncher<String> permissionLauncher;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +34,6 @@ public class InternshipDetailsFragment extends Fragment {
 
         // Khởi tạo Firebase
         db = FirebaseFirestore.getInstance();
-        storageRef = FirebaseStorage.getInstance().getReference("resumes");
 
         // Khởi tạo views
         textJobTitle = view.findViewById(R.id.text_job_title);
@@ -52,40 +43,29 @@ public class InternshipDetailsFragment extends Fragment {
         textStipend = view.findViewById(R.id.text_stipend);
         textDeadline = view.findViewById(R.id.text_deadline);
         textApplicationStatus = view.findViewById(R.id.text_application_status);
-        buttonApply = view.findViewById(R.id.button_apply);
+        editFullName = view.findViewById(R.id.edit_full_name);
+        editPhoneNumber = view.findViewById(R.id.edit_phone_number);
+        editEmail = view.findViewById(R.id.edit_email);
+        editAddress = view.findViewById(R.id.edit_address);
+        editIntroduction = view.findViewById(R.id.edit_introduction);
+        editPersonalSummary = view.findViewById(R.id.edit_personal_summary);
+        editMotivation = view.findViewById(R.id.edit_motivation);
+        editCommitment = view.findViewById(R.id.edit_commitment);
+        buttonSubmitApplication = view.findViewById(R.id.button_submit_application);
 
         // Lấy internship ID
-        internshipId = getArguments().getString("internship_id");
-
-        // Thiết lập resume picker
-        resumeLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                Uri resumeUri = result.getData().getData();
-                uploadResumeAndApply(resumeUri);
-            }
-        });
-
-        // Thiết lập yêu cầu quyền
-        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                pickResume();
-            } else {
-                Toast.makeText(getContext(), "Cần quyền truy cập bộ nhớ để chọn hồ sơ", Toast.LENGTH_SHORT).show();
-            }
-        });
+        internshipId = getArguments() != null ? getArguments().getString("internship_id") : null;
+        if (internshipId == null) {
+            Log.e(TAG, "internshipId is null");
+            Toast.makeText(getContext(), "Không tìm thấy ID thực tập", Toast.LENGTH_SHORT).show();
+            return view;
+        }
 
         // Tải chi tiết thực tập
         loadInternshipDetails();
 
-        // Xử lý nút nộp hồ sơ
-        buttonApply.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-            } else {
-                pickResume();
-            }
-        });
+        // Xử lý nút nộp đơn
+        buttonSubmitApplication.setOnClickListener(v -> submitApplication());
 
         return view;
     }
@@ -95,17 +75,22 @@ public class InternshipDetailsFragment extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     Internship internship = documentSnapshot.toObject(Internship.class);
                     if (internship != null) {
-                        textJobTitle.setText(internship.getJobTitle());
-                        textCompanyName.setText("Công ty: " + internship.getCompanyName());
-                        textDescription.setText("Mô tả: " + internship.getDescription());
-                        textRequirements.setText("Yêu cầu: " + internship.getRequirements());
-                        textStipend.setText("Trợ cấp: " + internship.getStipend() + " VNĐ");
-                        textDeadline.setText("Hạn nộp: " + new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                                .format(new Date(internship.getDeadline())));
+                        textJobTitle.setText(internship.getJobTitle() != null ? internship.getJobTitle() : "Không có tiêu đề");
+                        textCompanyName.setText("Công ty: " + (internship.getCompanyName() != null ? internship.getCompanyName() : "Không rõ"));
+                        textDescription.setText("Mô tả: " + (internship.getDescription() != null ? internship.getDescription() : "Không có mô tả"));
+                        textRequirements.setText("Yêu cầu: " + (internship.getRequirements() != null ? internship.getRequirements() : "Không có yêu cầu"));
+                        textStipend.setText("Trợ cấp: " + (internship.getStipend() != null ?
+                                String.format("%,.0f VNĐ", internship.getStipend()) : "Không rõ"));
+                        textDeadline.setText("Hạn nộp: " + (internship.getDeadline() != null && internship.getDeadline() != 0 ?
+                                new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date(internship.getDeadline())) : "Không có hạn"));
                         checkApplicationStatus();
+                    } else {
+                        Log.w(TAG, "Internship data is null for ID: " + internshipId);
+                        Toast.makeText(getContext(), "Dữ liệu thực tập không tồn tại", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading internship details", e);
                     Toast.makeText(getContext(), "Lỗi khi tải chi tiết thực tập", Toast.LENGTH_SHORT).show();
                 });
     }
@@ -118,49 +103,74 @@ public class InternshipDetailsFragment extends Fragment {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         Application application = queryDocumentSnapshots.getDocuments().get(0).toObject(Application.class);
                         textApplicationStatus.setVisibility(View.VISIBLE);
-                        textApplicationStatus.setText("Trạng thái nộp hồ sơ: " + application.getStatus());
-                        buttonApply.setEnabled(false);
+                        textApplicationStatus.setText("Trạng thái nộp hồ sơ: " + (application != null && application.getStatus() != null ? application.getStatus() : "Không rõ"));
+                        buttonSubmitApplication.setEnabled(false);
                     } else {
                         textApplicationStatus.setVisibility(View.GONE);
-                        buttonApply.setEnabled(true);
+                        buttonSubmitApplication.setEnabled(true);
                     }
                 })
                 .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error checking application status", e);
                     Toast.makeText(getContext(), "Lỗi khi kiểm tra trạng thái nộp hồ sơ", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void pickResume() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/pdf");
-        resumeLauncher.launch(intent);
-    }
+    private void submitApplication() {
+        if (internshipId == null) {
+            Log.e(TAG, "Cannot submit: internshipId is null");
+            Toast.makeText(getContext(), "Lỗi khi nộp đơn", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-    private void uploadResumeAndApply(Uri resumeUri) {
+        String fullName = editFullName.getText().toString().trim();
+        String phoneNumber = editPhoneNumber.getText().toString().trim();
+        String email = editEmail.getText().toString().trim();
+        String address = editAddress.getText().toString().trim();
+        String introduction = editIntroduction.getText().toString().trim();
+        String personalSummary = editPersonalSummary.getText().toString().trim();
+        String motivation = editMotivation.getText().toString().trim();
+        String commitment = editCommitment.getText().toString().trim();
+        String companyName = textCompanyName.getText().toString().replace("Công ty: ", "").trim();
+        String applicationDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
+        if (fullName.isEmpty() || phoneNumber.isEmpty() || email.isEmpty() || introduction.isEmpty() ||
+                personalSummary.isEmpty() || motivation.isEmpty() || commitment.isEmpty()) {
+            Toast.makeText(getContext(), "Vui lòng điền đầy đủ thông tin bắt buộc", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String applicationId = db.collection("applications").document().getId();
-        StorageReference resumeRef = storageRef.child(applicationId + ".pdf");
+        Application application = new Application(
+                applicationId,
+                "anonymous_user", // Thay bằng studentId nếu có đăng nhập
+                internshipId,
+                fullName,
+                null, // dateOfBirth (tùy chọn, có thể thêm EditText nếu cần)
+                phoneNumber,
+                email,
+                address,
+                companyName,
+                null, // department (tùy chọn)
+                null, // recipientTitle (tùy chọn)
+                "ĐƠN XIN VIỆC", // applicationTitle (cố định, có thể cho nhập nếu cần)
+                introduction,
+                personalSummary,
+                motivation,
+                commitment,
+                applicationDate,
+                "Pending",
+                System.currentTimeMillis()
+        );
 
-        resumeRef.putFile(resumeUri)
-                .addOnSuccessListener(taskSnapshot -> resumeRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    Application application = new Application(
-                            applicationId,
-                            "anonymous_user", // Không yêu cầu đăng nhập
-                            internshipId,
-                            uri.toString(),
-                            "Pending",
-                            System.currentTimeMillis()
-                    );
-                    db.collection("applications").document(applicationId).set(application)
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(getContext(), "Nộp hồ sơ thành công", Toast.LENGTH_SHORT).show();
-                                checkApplicationStatus();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(getContext(), "Lỗi khi nộp hồ sơ", Toast.LENGTH_SHORT).show();
-                            });
-                }))
+        db.collection("applications").document(applicationId).set(application)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Nộp đơn thành công", Toast.LENGTH_SHORT).show();
+                    checkApplicationStatus();
+                })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Lỗi khi tải lên hồ sơ", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error saving application", e);
+                    Toast.makeText(getContext(), "Lỗi khi nộp đơn", Toast.LENGTH_SHORT).show();
                 });
     }
 }
