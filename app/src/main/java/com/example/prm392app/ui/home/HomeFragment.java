@@ -1,6 +1,8 @@
+
 package com.example.prm392app.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements InternshipAdapter.OnItemClickListener {
+    private static final String TAG = "HomeFragment";
     private RecyclerView recyclerView;
     private InternshipAdapter adapter;
     private List<Internship> internships;
@@ -76,8 +79,6 @@ public class HomeFragment extends Fragment implements InternshipAdapter.OnItemCl
         // Tải danh sách thực tập mặc định
         loadInternships("Tất cả");
 
-
-
         return view;
     }
 
@@ -90,22 +91,29 @@ public class HomeFragment extends Fragment implements InternshipAdapter.OnItemCl
             internships.clear();
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 Internship internship = document.toObject(Internship.class);
-                internship.setInternshipId(document.getId());
-                internships.add(internship);
+                if (internship != null) {
+                    internship.setInternshipId(document.getId());
+                    internships.add(internship);
+                } else {
+                    Log.w(TAG, "Internship is null for document: " + document.getId());
+                }
             }
             sortInternships();
             adapter.updateData(internships);
         }).addOnFailureListener(e -> {
+            Log.e(TAG, "Error loading internships", e);
             Toast.makeText(getContext(), "Lỗi khi tải danh sách thực tập", Toast.LENGTH_SHORT).show();
         });
     }
 
     private void sortInternships() {
         Collections.sort(internships, (i1, i2) -> {
+            Long postedAt1 = i1.getPostedAt() != null ? i1.getPostedAt() : 0L;
+            Long postedAt2 = i2.getPostedAt() != null ? i2.getPostedAt() : 0L;
             if (isSortedAscending) {
-                return Long.compare(i1.getPostedAt(), i2.getPostedAt());
+                return Long.compare(postedAt1, postedAt2);
             } else {
-                return Long.compare(i2.getPostedAt(), i1.getPostedAt());
+                return Long.compare(postedAt2, postedAt1);
             }
         });
         adapter.notifyDataSetChanged();
@@ -121,9 +129,9 @@ public class HomeFragment extends Fragment implements InternshipAdapter.OnItemCl
         newInternship.setField("IT");
         newInternship.setDescription("Phát triển ứng dụng di động");
         newInternship.setRequirements("Kiến thức cơ bản về Kotlin");
-        newInternship.setStipend(6000000L);
-        newInternship.setDeadline(1764181200000L); // 24/11/2025 00:00:00 GMT+7
-        newInternship.setPostedAt(System.currentTimeMillis()); // Thời gian hiện tại
+        newInternship.setStipend(6000000.0); // Sửa từ 6000000L thành 6000000.0 để khớp với Double
+        newInternship.setDeadline(1764181200000L); // Dùng Long
+        newInternship.setPostedAt(System.currentTimeMillis()); // Dùng Long
 
         // Lưu vào Firestore
         db.collection("internships")
@@ -136,15 +144,27 @@ public class HomeFragment extends Fragment implements InternshipAdapter.OnItemCl
                     Toast.makeText(getContext(), "Thêm thực tập thành công, ID: " + id, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding internship", e);
                     Toast.makeText(getContext(), "Lỗi khi thêm thực tập: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     @Override
     public void onItemClick(Internship internship) {
-        Bundle bundle = new Bundle();
-        bundle.putString("internship_id", internship.getInternshipId());
-        NavController navController = Navigation.findNavController(requireView());
-        navController.navigate(R.id.action_home_to_internship_details, bundle);
+        if (internship != null && internship.getInternshipId() != null) {
+            Bundle bundle = new Bundle();
+            Log.d(TAG, "Clicked internship with ID: " + internship.getInternshipId());
+            bundle.putString("internship_id", internship.getInternshipId());
+            NavController navController = Navigation.findNavController(requireView());
+            try {
+                navController.navigate(R.id.action_home_to_internship_details, bundle);
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "Navigation failed: " + e.getMessage());
+                Toast.makeText(getContext(), "Lỗi khi chuyển trang chi tiết", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Log.e(TAG, "Internship or internshipId is null");
+            Toast.makeText(getContext(), "Dữ liệu thực tập không hợp lệ", Toast.LENGTH_SHORT).show();
+        }
     }
 }
