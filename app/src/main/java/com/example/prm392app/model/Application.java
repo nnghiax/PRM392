@@ -11,7 +11,7 @@ public class Application {
     private String email;
     private String address; // Địa chỉ nơi ở (rút gọn)
     private String companyName; // Tên công ty/tổ chức tuyển dụng
-    private String department; // Phòng ban tuyển dụng (tùy chọn)
+
     private String applicationTitle; // Tiêu đề đơn (ví dụ: ĐƠN XIN VIỆC)
     private String introduction; // Lời mở đầu (lý do viết đơn, nguồn thông tin, vị trí ứng tuyển)
     private String personalSummary; // Trình bày ngắn gọn về bản thân (học vấn, kỹ năng, kinh nghiệm)
@@ -24,7 +24,7 @@ public class Application {
     public Application() {}
 
     public Application(String applicationId, String studentId, String internshipId, String fullName, String dateOfBirth,
-                       String phoneNumber, String email, String address, String companyName, String department,
+                       String phoneNumber, String email, String address, String companyName,
                        String applicationTitle, String introduction, String personalSummary,
                        String motivation, String commitment, String applicationDate, String status, long appliedAt) {
         this.applicationId = applicationId;
@@ -36,7 +36,7 @@ public class Application {
         this.email = email;
         this.address = address;
         this.companyName = companyName;
-        this.department = department;
+
 
         this.applicationTitle = applicationTitle;
         this.introduction = introduction;
@@ -66,8 +66,7 @@ public class Application {
     public void setAddress(String address) { this.address = address; }
     public String getCompanyName() { return companyName; }
     public void setCompanyName(String companyName) { this.companyName = companyName; }
-    public String getDepartment() { return department; }
-    public void setDepartment(String department) { this.department = department; }
+
 
     public String getApplicationTitle() { return applicationTitle; }
     public void setApplicationTitle(String applicationTitle) { this.applicationTitle = applicationTitle; }

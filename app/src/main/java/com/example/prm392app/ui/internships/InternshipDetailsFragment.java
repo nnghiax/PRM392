@@ -1,5 +1,4 @@
-
-        package com.example.prm392app.ui.internships;
+package com.example.prm392app.ui.internships;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import com.example.prm392app.R;
 import com.example.prm392app.model.Application;
 import com.example.prm392app.model.Internship;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class InternshipDetailsFragment extends Fragment {
     private Button buttonSubmitApplication;
     private FirebaseFirestore db;
     private String internshipId;
+    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class InternshipDetailsFragment extends Fragment {
 
         // Khởi tạo Firebase
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // Khởi tạo views
         textJobTitle = view.findViewById(R.id.text_job_title);
@@ -96,8 +99,16 @@ public class InternshipDetailsFragment extends Fragment {
     }
 
     private void checkApplicationStatus() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để kiểm tra trạng thái", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String studentId = currentUser.getUid();
+
         db.collection("applications")
                 .whereEqualTo("internshipId", internshipId)
+                .whereEqualTo("studentId", studentId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
@@ -117,12 +128,18 @@ public class InternshipDetailsFragment extends Fragment {
     }
 
     private void submitApplication() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để nộp đơn", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (internshipId == null) {
             Log.e(TAG, "Cannot submit: internshipId is null");
             Toast.makeText(getContext(), "Lỗi khi nộp đơn", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        String studentId = currentUser.getUid();
         String fullName = editFullName.getText().toString().trim();
         String phoneNumber = editPhoneNumber.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
@@ -143,7 +160,7 @@ public class InternshipDetailsFragment extends Fragment {
         String applicationId = db.collection("applications").document().getId();
         Application application = new Application(
                 applicationId,
-                "anonymous_user", // Thay bằng studentId nếu có đăng nhập
+                studentId,
                 internshipId,
                 fullName,
                 null, // dateOfBirth (tùy chọn, có thể thêm EditText nếu cần)
@@ -151,7 +168,6 @@ public class InternshipDetailsFragment extends Fragment {
                 email,
                 address,
                 companyName,
-                null, // department (tùy chọn)
                 "ĐƠN XIN VIỆC", // applicationTitle (cố định, có thể cho nhập nếu cần)
                 introduction,
                 personalSummary,
