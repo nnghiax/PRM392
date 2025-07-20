@@ -12,12 +12,12 @@ import com.example.prm392app.model.Application;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.ViewHolder> {
+public class ApplicationAdapter1 extends RecyclerView.Adapter<ApplicationAdapter1.ViewHolder> {
 
     private List<Application> applications;
     private Context context;
 
-    public ApplicationAdapter() {
+    public ApplicationAdapter1() {
         this.applications = new ArrayList<>();
     }
 

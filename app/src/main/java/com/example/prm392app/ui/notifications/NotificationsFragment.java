@@ -11,15 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392app.R;
 import com.example.prm392app.databinding.FragmentNotificationsBinding;
-import com.example.prm392app.ui.adapter.ApplicationAdapter;
-import com.example.prm392app.model.Application;
-import java.util.List;
+import com.example.prm392app.ui.adapter.ApplicationAdapter1;
 
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
     private RecyclerView recyclerView;
-    private ApplicationAdapter adapter;
+    private ApplicationAdapter1 adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +29,7 @@ public class NotificationsFragment extends Fragment {
         // Thiết lập RecyclerView
         recyclerView = root.findViewById(R.id.recycler_view_applications);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ApplicationAdapter();
+        adapter = new ApplicationAdapter1();
         recyclerView.setAdapter(adapter);
 
         // Quan sát danh sách ứng dụng và cập nhật adapter
