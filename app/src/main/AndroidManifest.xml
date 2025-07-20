@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -17,7 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PRM392app"
         tools:targetApi="31">
-
+        <activity
+            android:name=".uiRecruiters.notifications.NotificationsRecruiterFragment"
+            android:exported="false" />
+        <activity
+            android:name=".uiRecruiters.chat.ChatRecruiterFragment"
+            android:exported="false" />
+        <activity
+            android:name=".uiRecruiters.dashboard.DashboardRecruiterFragment"
+            android:exported="false" />
+        <activity
+            android:name=".uiRecruiters.home.HomeRecruiterFragment"
+            android:exported="false" />
         <activity
             android:name=".SignInActivity"
             android:exported="true"

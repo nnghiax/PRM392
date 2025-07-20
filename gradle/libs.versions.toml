@@ -1,5 +1,5 @@
 [versions]
-agp = "8.10.1"
+agp = "8.9.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -12,7 +12,8 @@ navigationFragment = "2.6.0"
 navigationUi = "2.6.0"
 firebaseBom = "33.16.0"
 gms = "4.4.3"
-recyclerview = "1.3.2" # Thêm phiên bản cho recyclerview
+recyclerview = "1.3.2"
+activity = "1.10.1" # Thêm phiên bản cho recyclerview
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,7 +31,8 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" } # Thêm recyclerview
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" } # Thêm recyclerview
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
