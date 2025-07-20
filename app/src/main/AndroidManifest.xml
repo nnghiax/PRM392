@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -16,7 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PRM392app"
         tools:targetApi="31">
-       
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyADtmRYCFwQxx0bvzPvlPqSD84Ui8PcnMg" />
         <activity
             android:name=".SignInActivity"
             android:exported="true"

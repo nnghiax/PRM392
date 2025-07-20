@@ -1,5 +1,4 @@
-
-        package com.example.prm392app;
+package com.example.prm392app;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,14 +35,14 @@ public class RecruiterActivity extends AppCompatActivity {
             return;
         }
 
-        // Khởi tạo navigation trực tiếp vì không kiểm tra vai trò
+        // Khởi tạo navigation trực tiếp
         setupNavigation();
     }
 
     private void setupNavigation() {
         // Khởi tạo binding và set content view
         binding = ActivityRecruiterBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot()); // Sửa cú pháp tại đây
+        setContentView(binding.getRoot());
 
         // Thiết lập BottomNavigationView
         BottomNavigationView navView = binding.navView1;
