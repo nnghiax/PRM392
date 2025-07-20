@@ -1,5 +1,4 @@
-
-        package com.example.prm392app.ui.adapter;
+package com.example.prm392app.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392app.R;
 import com.example.prm392app.model.Application;
+import com.example.prm392app.model.InterviewSchedule;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
@@ -40,31 +40,57 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         holder.textTitle.setText(application.getApplicationTitle());
         holder.textCompany.setText(application.getCompanyName());
         holder.textStatus.setText(application.getStatus());
-        holder.btnWithdraw.setOnClickListener(v -> {
-            updateApplicationStatus(application.getApplicationId(), "Withdraw", position);
-        });
-        holder.btnInterview.setOnClickListener(v -> {
-            updateApplicationStatus(application.getApplicationId(), "Under Review", position);
-        });
+
+        // Only show withdraw and interview buttons for Pending status
+        if ("Pending".equals(application.getStatus())) {
+            holder.btnWithdraw.setVisibility(View.VISIBLE);
+            holder.btnInterview.setVisibility(View.VISIBLE);
+            holder.btnWithdraw.setOnClickListener(v -> {
+                updateApplicationStatus(application.getApplicationId(), "Withdraw", position);
+            });
+            holder.btnInterview.setOnClickListener(v -> {
+                updateApplicationStatus(application.getApplicationId(), "Under Review", position);
+            });
+            holder.btnAccept.setVisibility(View.GONE);
+            holder.btnDecline.setVisibility(View.GONE);
+        } else if ("Scheduled".equals(application.getStatus())) {
+            holder.btnWithdraw.setVisibility(View.GONE);
+            holder.btnInterview.setVisibility(View.GONE);
+            holder.btnAccept.setVisibility(View.VISIBLE);
+            holder.btnDecline.setVisibility(View.VISIBLE);
+
+            // Load interview schedule
+            db.collection("interview_schedules")
+                .whereEqualTo("applicationId", application.getApplicationId())
+                .whereEqualTo("status", "PENDING")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        InterviewSchedule schedule = queryDocumentSnapshots.getDocuments().get(0).toObject(InterviewSchedule.class);
+                        holder.textInterviewTime.setText("Lịch phỏng vấn: " + schedule.getProposedDateTime());
+                        holder.textInterviewTime.setVisibility(View.VISIBLE);
+
+                        holder.btnAccept.setOnClickListener(v -> {
+                            updateInterviewStatus(schedule.getScheduleId(), "ACCEPTED", application.getApplicationId());
+                        });
+
+                        holder.btnDecline.setOnClickListener(v -> {
+                            updateInterviewStatus(schedule.getScheduleId(), "DECLINED", application.getApplicationId());
+                        });
+                    }
+                });
+        } else {
+            holder.btnWithdraw.setVisibility(View.GONE);
+            holder.btnInterview.setVisibility(View.GONE);
+            holder.btnAccept.setVisibility(View.GONE);
+            holder.btnDecline.setVisibility(View.GONE);
+            holder.textInterviewTime.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public int getItemCount() {
         return applicationList.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textTitle, textCompany, textStatus;
-        Button btnWithdraw, btnInterview;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textTitle = itemView.findViewById(R.id.text_application_title);
-            textCompany = itemView.findViewById(R.id.text_company_name);
-            textStatus = itemView.findViewById(R.id.text_status);
-            btnWithdraw = itemView.findViewById(R.id.btn_withdraw);
-            btnInterview = itemView.findViewById(R.id.btn_interview);
-        }
     }
 
     private void updateApplicationStatus(String applicationId, String newStatus, int position) {
@@ -78,5 +104,36 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "Lỗi khi cập nhật trạng thái", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void updateInterviewStatus(String scheduleId, String status, String applicationId) {
+        db.collection("interview_schedules")
+            .document(scheduleId)
+            .update("status", status)
+            .addOnSuccessListener(aVoid -> {
+                String newAppStatus = status.equals("ACCEPTED") ? "Interview Accepted" : "Interview Declined";
+                updateApplicationStatus(applicationId, newAppStatus, -1);
+                Toast.makeText(context, "Cập nhật trạng thái phỏng vấn thành công", Toast.LENGTH_SHORT).show();
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(context, "Lỗi khi cập nhật trạng thái phỏng vấn", Toast.LENGTH_SHORT).show();
+            });
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textTitle, textCompany, textStatus, textInterviewTime;
+        Button btnWithdraw, btnInterview, btnAccept, btnDecline;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textTitle = itemView.findViewById(R.id.text_application_title);
+            textCompany = itemView.findViewById(R.id.text_company_name);
+            textStatus = itemView.findViewById(R.id.text_status);
+            textInterviewTime = itemView.findViewById(R.id.text_interview_time);
+            btnWithdraw = itemView.findViewById(R.id.btn_withdraw);
+            btnInterview = itemView.findViewById(R.id.btn_interview);
+            btnAccept = itemView.findViewById(R.id.btn_accept);
+            btnDecline = itemView.findViewById(R.id.btn_decline);
+        }
     }
 }
