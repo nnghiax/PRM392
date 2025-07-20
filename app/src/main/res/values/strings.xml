@@ -4,8 +4,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_chat">Chat</string>
-    <string name="title_home_recruiter">Trang chủ Recruiter</string>
-    <string name="title_dashboard_recruiter">Bảng điều khiển Recruiter</string>
-    <string name="title_notifications_recruiter">Thông báo Recruiter</string>
+    <string name="title_home_recruiter">home Recruiter</string>
+    <string name="title_dashboard_recruiter">Dashboard Recruiter</string>
+    <string name="title_notifications_recruiter">Notifications Recruiter</string>
     <string name="title_chat_recruiter">Chat Recruiter</string>
 </resources>

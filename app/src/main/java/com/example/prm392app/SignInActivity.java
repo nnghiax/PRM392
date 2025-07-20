@@ -81,6 +81,7 @@ public class SignInActivity extends AppCompatActivity {
                                 }
                             } else {
                                 Toast.makeText(this, "Error fetching role: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                mAuth.signOut();
                             }
                         });
                     } else {
