@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392app.R;
 import com.example.prm392app.model.Application;
@@ -40,6 +41,19 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         holder.textTitle.setText(application.getApplicationTitle());
         holder.textCompany.setText(application.getCompanyName());
         holder.textStatus.setText(application.getStatus());
+
+        boolean isFinalStatus = "Withdraw".equals(application.getStatus()) || "Under Review".equals(application.getStatus());
+        holder.btnWithdraw.setEnabled(!isFinalStatus);
+        holder.btnInterview.setEnabled(!isFinalStatus);
+
+        if (isFinalStatus) {
+            holder.btnWithdraw.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.disabled_button));
+            holder.btnInterview.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.disabled_button));
+        } else {
+            holder.btnWithdraw.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.red_button));
+            holder.btnInterview.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.blue_button));
+        }
+
         holder.btnWithdraw.setOnClickListener(v -> {
             updateApplicationStatus(application.getApplicationId(), "Withdraw", position);
         });
