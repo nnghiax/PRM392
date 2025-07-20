@@ -1,37 +1,82 @@
-package com.example.prm392app.ui.dashboard;
+
+        package com.example.prm392app.ui.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.example.prm392app.databinding.FragmentDashboardBinding;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.prm392app.R;
+import com.example.prm392app.model.Application;
+import com.example.prm392app.ui.adapter.ApplicationAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private static final String TAG = "DashboardFragment";
+    private RecyclerView recyclerView;
+    private ApplicationAdapter applicationAdapter;
+    private List<Application> applicationList;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        // Khởi tạo Firebase
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        // Khởi tạo RecyclerView
+        recyclerView = root.findViewById(R.id.recycler_view_applications);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        applicationList = new ArrayList<>();
+        applicationAdapter = new ApplicationAdapter(applicationList, getContext(), db);
+        recyclerView.setAdapter(applicationAdapter);
+
+        // Tải danh sách ứng dụng từ Firestore
+        loadApplications();
+
         return root;
+    }
+
+    private void loadApplications() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Log.w(TAG, "No authenticated user");
+            return;
+        }
+        String studentId = currentUser.getUid();
+
+        db.collection("applications")
+                .whereEqualTo("studentId", studentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    applicationList.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Application application = document.toObject(Application.class);
+                        applicationList.add(application);
+                    }
+                    applicationAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading applications", e);
+                });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }
