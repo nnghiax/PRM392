@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392app.R;
 import com.example.prm392app.model.Application;
+import com.example.prm392app.model.Internship;
 import com.example.prm392app.model.InterviewSchedule;
 import com.example.prm392app.uiRecruiters.adapter.InterviewApplicationAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,48 +32,103 @@ public class DashboardRecruiterFragment extends Fragment {
     private List<Application> applicationList;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private String currentUserId;
+    private InterviewApplicationAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.activity_dashboard_recruiter_fragment, container, false);
 
-        // Initialize Firebase
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-
-        // Initialize RecyclerView
-        recyclerView = root.findViewById(R.id.recycler_view_applications);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        applicationList = new ArrayList<>();
-        InterviewApplicationAdapter adapter = new InterviewApplicationAdapter(applicationList, getContext(),
-                (application) -> showDateTimePicker(application));
-        recyclerView.setAdapter(adapter);
-
-        // Load applications with Under Review status
-        loadUnderReviewApplications();
+        initializeFirebase();
+        setupRecyclerView(root);
+        if (currentUserId != null) {
+            loadApplicationsByRecruiter();
+        }
 
         return root;
     }
 
-    private void loadUnderReviewApplications() {
-        db.collection("applications")
-                .whereEqualTo("status", "Under Review")
+    private void initializeFirebase() {
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            currentUserId = currentUser.getUid();
+            Log.d(TAG, "Current user ID (Recruiter): " + currentUserId);
+        } else {
+            Log.e(TAG, "No user logged in");
+            Toast.makeText(getContext(), "Please log in first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setupRecyclerView(View root) {
+        recyclerView = root.findViewById(R.id.recycler_view_applications);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        applicationList = new ArrayList<>();
+        adapter = new InterviewApplicationAdapter(applicationList, getContext(), this::showDateTimePicker);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void loadApplicationsByRecruiter() {
+        Log.d(TAG, "Loading applications for recruiter: " + currentUserId);
+
+        // First, get all internships posted by this recruiter
+        db.collection("internships")
+                .whereEqualTo("companyId", currentUserId)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    applicationList.clear();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Application application = document.toObject(Application.class);
-                        application.setApplicationId(document.getId());
-                        applicationList.add(application);
+                .addOnSuccessListener(internshipSnapshots -> {
+                    List<String> internshipIds = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : internshipSnapshots) {
+                        Internship internship = doc.toObject(Internship.class);
+                        internshipIds.add(doc.getId());
+                        Log.d(TAG, "Found internship: " + doc.getId() + " with company: " + internship.getCompanyName());
                     }
-                    recyclerView.getAdapter().notifyDataSetChanged();
+
+                    if (internshipIds.isEmpty()) {
+                        Log.d(TAG, "No internships found for this recruiter");
+                        return;
+                    }
+
+                    // Then, get all applications for these internships with "Under Review" status
+                    db.collection("applications")
+                            .whereIn("internshipId", internshipIds)
+                            .whereEqualTo("status", "Under Review")
+                            .addSnapshotListener((value, error) -> {
+                                if (error != null) {
+                                    Log.e(TAG, "Listen failed for applications", error);
+                                    return;
+                                }
+
+                                applicationList.clear();
+                                if (value != null && !value.isEmpty()) {
+                                    for (QueryDocumentSnapshot document : value) {
+                                        try {
+                                            Application application = document.toObject(Application.class);
+                                            application.setApplicationId(document.getId());
+                                            applicationList.add(application);
+                                            Log.d(TAG, "Added application: " + document.getId() +
+                                                    " for internship: " + application.getInternshipId() +
+                                                    " from student: " + application.getFullName());
+                                        } catch (Exception e) {
+                                            Log.e(TAG, "Error converting document", e);
+                                        }
+                                    }
+                                    Log.d(TAG, "Total applications loaded: " + applicationList.size());
+                                } else {
+                                    Log.d(TAG, "No applications found with Under Review status");
+                                }
+
+                                adapter.notifyDataSetChanged();
+                            });
                 })
-                .addOnFailureListener(e -> Log.e(TAG, "Error loading applications", e));
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error getting internships", e);
+                    Toast.makeText(getContext(), "Error loading internships", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void showDateTimePicker(Application application) {
         Calendar calendar = Calendar.getInstance();
-
         DatePickerDialog dateDialog = new DatePickerDialog(getContext(),
                 (view, year, month, dayOfMonth) -> {
                     TimePickerDialog timeDialog = new TimePickerDialog(getContext(),
@@ -108,15 +165,23 @@ public class DashboardRecruiterFragment extends Fragment {
                 .set(schedule)
                 .addOnSuccessListener(aVoid -> {
                     updateApplicationStatus(application.getApplicationId(), "Scheduled");
+                    Toast.makeText(getContext(), "Interview scheduled successfully", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e -> Log.e(TAG, "Error scheduling interview", e));
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error scheduling interview", e);
+                    Toast.makeText(getContext(), "Failed to schedule interview", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void updateApplicationStatus(String applicationId, String newStatus) {
         db.collection("applications")
                 .document(applicationId)
                 .update("status", newStatus)
-                .addOnSuccessListener(aVoid -> loadUnderReviewApplications())
-                .addOnFailureListener(e -> Log.e(TAG, "Error updating application status", e));
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Application status updated to: " + newStatus);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating application status", e);
+                });
     }
 }
