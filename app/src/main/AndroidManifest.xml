@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -40,6 +39,7 @@
         <activity
             android:name=".RecruiterActivity"
             android:exported="false" />
+
     </application>
 
 </manifest>

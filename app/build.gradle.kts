@@ -34,6 +34,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -46,6 +47,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth") // Authentication
     implementation("com.google.firebase:firebase-storage") // Storage
     implementation("com.google.firebase:firebase-database") // Realtime Database (nếu cần)
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.android.material:material")
 
 
     // Navigation dependencies (loại bỏ trùng lặp)
