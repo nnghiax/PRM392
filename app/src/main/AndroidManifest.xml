@@ -23,7 +23,7 @@
             android:name=".uiRecruiters.chat.ChatRecruiterFragment"
             android:exported="false" />
         <activity
-            android:name=".uiRecruiters.dashboard.DashboardRecruiterFragment"
+            android:name=".uiRecruiters.dashboard.InterviewScheduleFragment"
             android:exported="false" />
         <activity
             android:name=".uiRecruiters.home.HomeRecruiterFragment"

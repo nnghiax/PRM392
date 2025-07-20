@@ -41,12 +41,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
         holder.messageTextView.setText(message.getContent());
 
-        // ? ??t background phù h?p
+
         holder.messageTextView.setBackgroundResource(
                 isSentByMe ? R.drawable.bg_message_sent : R.drawable.bg_message_received
         );
 
-        // ? C?n ch?nh trái/ph?i
+
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.messageTextView.getLayoutParams();
         params.gravity = isSentByMe ? Gravity.END : Gravity.START;
         holder.messageTextView.setLayoutParams(params);

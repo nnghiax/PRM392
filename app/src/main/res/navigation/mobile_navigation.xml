@@ -82,9 +82,9 @@
     <!-- Dashboard Recruiter Fragment -->
     <fragment
         android:id="@+id/navigation_dashboard1"
-        android:name="com.example.prm392app.uiRecruiters.dashboard.DashboardRecruiterFragment"
+        android:name="com.example.prm392app.uiRecruiters.dashboard.InterviewScheduleFragment"
         android:label="@string/title_dashboard_recruiter"
-        tools:layout="@layout/activity_dashboard_recruiter_fragment" />
+        tools:layout="@layout/fragment_interview_schedule" />
 
     <!-- Home Recruiter Fragment -->
     <fragment
