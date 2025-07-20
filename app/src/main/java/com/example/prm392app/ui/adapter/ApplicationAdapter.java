@@ -97,8 +97,14 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         db.collection("applications").document(applicationId)
                 .update("status", newStatus)
                 .addOnSuccessListener(aVoid -> {
-                    applicationList.get(position).setStatus(newStatus);
-                    notifyItemChanged(position);
+                    // Chỉ cập nhật list và notify nếu position hợp lệ
+                    if (position >= 0 && position < applicationList.size()) {
+                        applicationList.get(position).setStatus(newStatus);
+                        notifyItemChanged(position);
+                    } else {
+                        // Nếu position không hợp lệ, refresh toàn bộ list
+                        notifyDataSetChanged();
+                    }
                     Toast.makeText(context, "Cập nhật trạng thái thành công", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
@@ -107,13 +113,22 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     }
 
     private void updateInterviewStatus(String scheduleId, String status, String applicationId) {
+        // Tìm position của application trong list
+        int position = -1;
+        for (int i = 0; i < applicationList.size(); i++) {
+            if (applicationList.get(i).getApplicationId().equals(applicationId)) {
+                position = i;
+                break;
+            }
+        }
+
+        final int finalPosition = position;
         db.collection("interview_schedules")
             .document(scheduleId)
             .update("status", status)
             .addOnSuccessListener(aVoid -> {
                 String newAppStatus = status.equals("ACCEPTED") ? "Interview Accepted" : "Interview Declined";
-                updateApplicationStatus(applicationId, newAppStatus, -1);
-                Toast.makeText(context, "Cập nhật trạng thái phỏng vấn thành công", Toast.LENGTH_SHORT).show();
+                updateApplicationStatus(applicationId, newAppStatus, finalPosition);
             })
             .addOnFailureListener(e -> {
                 Toast.makeText(context, "Lỗi khi cập nhật trạng thái phỏng vấn", Toast.LENGTH_SHORT).show();
