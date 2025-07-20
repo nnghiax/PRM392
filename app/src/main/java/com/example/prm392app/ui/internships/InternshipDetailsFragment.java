@@ -9,19 +9,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import com.example.prm392app.R;
 import com.example.prm392app.model.Application;
 import com.example.prm392app.model.Internship;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class InternshipDetailsFragment extends Fragment {
+public class InternshipDetailsFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = "InternshipDetailsFragment";
     private TextView textJobTitle, textCompanyName, textDescription, textRequirements, textStipend, textDeadline, textApplicationStatus;
     private EditText editFullName, editPhoneNumber, editEmail, editAddress, editIntroduction, editPersonalSummary, editMotivation, editCommitment;
@@ -29,6 +38,7 @@ public class InternshipDetailsFragment extends Fragment {
     private FirebaseFirestore db;
     private String internshipId;
     private FirebaseAuth mAuth;
+    private GoogleMap mMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,6 +74,12 @@ public class InternshipDetailsFragment extends Fragment {
             return view;
         }
 
+        // Khởi tạo Google Map
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
         // Tải chi tiết thực tập
         loadInternshipDetails();
 
@@ -87,6 +103,14 @@ public class InternshipDetailsFragment extends Fragment {
                         textDeadline.setText("Hạn nộp: " + (internship.getDeadline() != null && internship.getDeadline() != 0 ?
                                 new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date(internship.getDeadline())) : "Không có hạn"));
                         checkApplicationStatus();
+
+                        // Hiển thị vị trí trên bản đồ
+                        if (mMap != null && internship.getLatitude() != null && internship.getLongitude() != null) {
+                            LatLng position = new LatLng(internship.getLatitude(), internship.getLongitude());
+                            mMap.clear();
+                            mMap.addMarker(new MarkerOptions().position(position).title(internship.getJobTitle()));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
+                        }
                     } else {
                         Log.w(TAG, "Internship data is null for ID: " + internshipId);
                         Toast.makeText(getContext(), "Dữ liệu thực tập không tồn tại", Toast.LENGTH_SHORT).show();
@@ -96,6 +120,12 @@ public class InternshipDetailsFragment extends Fragment {
                     Log.e(TAG, "Error loading internship details", e);
                     Toast.makeText(getContext(), "Lỗi khi tải chi tiết thực tập", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        // Bản đồ sẽ được cập nhật trong loadInternshipDetails khi dữ liệu sẵn sàng
     }
 
     private void checkApplicationStatus() {

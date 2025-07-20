@@ -1,4 +1,4 @@
- package com.example.prm392app.uiRecruiters.home;
+  package com.example.prm392app.uiRecruiters.home;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -23,6 +23,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +42,7 @@ public class HomeRecruiterFragment extends Fragment implements OnMapReadyCallbac
     private Button buttonPickDeadline, buttonSaveInterview;
     private TextView textViewDeadline;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private Double selectedLatitude, selectedLongitude;
     private Long selectedDeadline;
 
@@ -47,8 +50,9 @@ public class HomeRecruiterFragment extends Fragment implements OnMapReadyCallbac
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_recruiter_fragment, container, false);
 
-        // Khởi tạo Firebase Firestore
+        // Khởi tạo Firebase Firestore và Auth
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // Ánh xạ các thành phần giao diện
         editTextJobTitle = view.findViewById(R.id.editTextJobTitle);
@@ -147,12 +151,20 @@ public class HomeRecruiterFragment extends Fragment implements OnMapReadyCallbac
             return;
         }
 
+        // Lấy userId từ Firebase Auth
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "Please log in to create an interview", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String companyId = currentUser.getUid();
+
         // Tạo đối tượng Internship
         String internshipId = db.collection("internships").document().getId();
         Internship internship = new Internship(
                 internshipId,
                 jobTitle,
-                "companyId", // Thay bằng logic lấy companyId nếu cần
+                companyId,
                 companyName,
                 locationAddress,
                 selectedLatitude,

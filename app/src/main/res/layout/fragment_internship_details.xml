@@ -5,178 +5,208 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_job_title"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="44dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:overScrollMode="ifContentScrolls"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/button_submit_application">
 
-    <TextView
-        android:id="@+id/text_company_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/text_job_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/text_company_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/text_requirements"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/text_description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_job_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/map"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/text_stipend"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/text_requirements"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_company_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/text_job_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/text_deadline"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/text_stipend"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                app:layout_constraintTop_toBottomOf="@id/text_company_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/text_application_status"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/text_deadline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_requirements"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                app:layout_constraintTop_toBottomOf="@id/text_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Form điền thông tin -->
-    <EditText
-        android:id="@+id/edit_full_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Họ và tên"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/text_application_status"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_stipend"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/text_requirements"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_phone_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Số điện thoại"
-        android:inputType="phone"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_full_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_deadline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/text_stipend"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_email"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_phone_number"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_application_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/text_deadline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_address"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Địa chỉ (ví dụ: Quận 1, TP.HCM)"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <!-- Form điền thông tin -->
+            <EditText
+                android:id="@+id/edit_full_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Họ và tên"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/text_application_status"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_introduction"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Lý do viết đơn (giới thiệu ngắn)"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_address"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <EditText
+                android:id="@+id/edit_phone_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Số điện thoại"
+                android:inputType="phone"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/edit_full_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_personal_summary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Trình bày về bản thân (học vấn, kỹ năng)"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_introduction"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/edit_phone_number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_motivation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Lý do ứng tuyển và đóng góp"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_personal_summary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <EditText
+                android:id="@+id/edit_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Địa chỉ (ví dụ: Quận 1, TP.HCM)"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/edit_email"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_commitment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Lời cam kết và mong muốn phỏng vấn"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_motivation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <EditText
+                android:id="@+id/edit_introduction"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:gravity="top"
+                android:hint="Lý do viết đơn (giới thiệu ngắn)"
+                android:inputType="textMultiLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_address" />
+
+            <EditText
+                android:id="@+id/edit_personal_summary"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:hint="Trình bày về bản thân (học vấn, kỹ năng)"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/edit_introduction"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <EditText
+                android:id="@+id/edit_motivation"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:hint="Lý do ứng tuyển và đóng góp"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/edit_personal_summary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <EditText
+                android:id="@+id/edit_commitment"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:gravity="top"
+                android:hint="Lời cam kết và mong muốn phỏng vấn"
+                android:inputType="textMultiLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_motivation" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/button_submit_application"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Nộp đơn"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_commitment"
+        android:layout_marginBottom="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
