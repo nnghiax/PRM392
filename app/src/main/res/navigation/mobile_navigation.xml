@@ -5,53 +5,49 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/navigation_home">
 
-    <!-- Home Fragment -->
+    <!-- Home Fragment (Student) -->
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.prm392app.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
-
-        <!-- ✅ Action: Home -> Internship Details -->
         <action
             android:id="@+id/action_home_to_internship_details"
             app:destination="@id/internshipDetailsFragment"
             app:popUpTo="@id/navigation_home"
-            app:launchSingleTop="true" >
+            app:launchSingleTop="true">
             <argument
                 android:name="internship_id"
                 app:argType="string" />
         </action>
     </fragment>
 
-    <!-- Dashboard Fragment -->
+    <!-- Dashboard Fragment (Student) -->
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.prm392app.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
-    <!-- Notifications Fragment -->
+    <!-- Notifications Fragment (Student) -->
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.prm392app.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 
-    <!-- User List Fragment -->
+    <!-- User List Fragment (Student) -->
     <fragment
         android:id="@+id/navigation_user_list"
         android:name="com.example.prm392app.ui.chat.UserListFragment"
         android:label="User List"
         tools:layout="@layout/fragment_user_list">
-
-        <!-- Action: User List -> Chat -->
         <action
             android:id="@+id/action_userList_to_chat"
             app:destination="@id/navigation_chat" />
     </fragment>
 
-    <!-- Chat Fragment -->
+    <!-- Chat Fragment (Student) -->
     <fragment
         android:id="@+id/navigation_chat"
         android:name="com.example.prm392app.ui.chat.ChatFragment"
@@ -64,11 +60,37 @@
         android:name="com.example.prm392app.ui.internships.InternshipDetailsFragment"
         android:label="Chi tiết thực tập"
         tools:layout="@layout/fragment_internship_details">
-
-        <!-- Argument nhận internship_id -->
         <argument
             android:name="internship_id"
             app:argType="string" />
     </fragment>
+
+    <!-- Notifications Recruiter Fragment -->
+    <fragment
+        android:id="@+id/navigation_notifications1"
+        android:name="com.example.prm392app.uiRecruiters.notifications.NotificationsRecruiterFragment"
+        android:label="@string/title_notifications_recruiter"
+        tools:layout="@layout/activity_notifications_recruiter_fragment" />
+
+    <!-- Chat Recruiter Fragment -->
+    <fragment
+        android:id="@+id/navigation_chat1"
+        android:name="com.example.prm392app.uiRecruiters.chat.ChatRecruiterFragment"
+        android:label="@string/title_chat_recruiter"
+        tools:layout="@layout/activity_chat_recruiter_fragment" />
+
+    <!-- Dashboard Recruiter Fragment -->
+    <fragment
+        android:id="@+id/navigation_dashboard1"
+        android:name="com.example.prm392app.uiRecruiters.dashboard.DashboardRecruiterFragment"
+        android:label="@string/title_dashboard_recruiter"
+        tools:layout="@layout/activity_dashboard_recruiter_fragment" />
+
+    <!-- Home Recruiter Fragment -->
+    <fragment
+        android:id="@+id/navigation_home1"
+        android:name="com.example.prm392app.uiRecruiters.home.HomeRecruiterFragment"
+        android:label="@string/title_home_recruiter"
+        tools:layout="@layout/activity_home_recruiter_fragment" />
 
 </navigation>

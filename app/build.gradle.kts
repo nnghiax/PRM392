@@ -34,6 +34,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -58,7 +59,8 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.recyclerview) // Sử dụng catalog thay vì version cụ thể
+    implementation(libs.recyclerview)
+    implementation(libs.activity) // Sử dụng catalog thay vì version cụ thể
 
     // Loại bỏ các dòng trùng lặp hoặc không cần thiết
     // implementation("androidx.recyclerview:recyclerview:1.3.2") // Đã thay bằng libs.recyclerview
