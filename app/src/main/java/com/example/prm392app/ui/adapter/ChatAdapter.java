@@ -4,6 +4,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,11 +41,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
         holder.messageTextView.setText(message.getContent());
 
-        // Set background
+        // ? ??t background phù h?p
         holder.messageTextView.setBackgroundResource(
                 isSentByMe ? R.drawable.bg_message_sent : R.drawable.bg_message_received
         );
 
+        // ? C?n ch?nh trái/ph?i
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.messageTextView.getLayoutParams();
+        params.gravity = isSentByMe ? Gravity.END : Gravity.START;
+        holder.messageTextView.setLayoutParams(params);
     }
 
     @Override
