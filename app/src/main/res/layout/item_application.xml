@@ -1,54 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:strokeColor="@android:color/black"
+    app:strokeWidth="1dp">
 
-    <TextView
-        android:id="@+id/text_application_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Application Title"
-        android:contentDescription="Application title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_company_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Company Name"
-        android:contentDescription="Company name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_application_title" />
+<TextView
+    android:id="@+id/text_application_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="18sp"
+    android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/text_status"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Status"
-        android:contentDescription="Application status"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_company_name" />
+<TextView
+    android:id="@+id/text_company_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="#666" />
 
-    <Button
-        android:id="@+id/btn_withdraw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Withdraw"
-        android:contentDescription="Withdraw application button"
-        app:layout_constraintEnd_toStartOf="@id/btn_interview"
-        app:layout_constraintTop_toBottomOf="@id/text_status"
-        app:layout_constraintBottom_toBottomOf="parent" />
+<TextView
+    android:id="@+id/text_application_status"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="#666" />
 
-    <Button
-        android:id="@+id/btn_interview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Interview"
-        android:contentDescription="Proceed to interview scheduling button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_status"
-        app:layout_constraintBottom_toBottomOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+<TextView
+    android:id="@+id/text_application_date"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="12sp"
+    android:textColor="#999" />
+</LinearLayout>
+    </androidx.cardview.widget.CardView>
+
