@@ -74,10 +74,21 @@
 
     <!-- Chat Recruiter Fragment -->
     <fragment
+        android:id="@+id/navigation_user_list1"
+        android:name="com.example.prm392app.uiRecruiters.chat.UserListRecruiterFragment"
+        android:label="User List"
+        tools:layout="@layout/fragment_user_list_recruiter">
+
+        <action
+            android:id="@+id/action_userListRecruiter_to_chatRecruiter"
+            app:destination="@id/navigation_chat1" />
+    </fragment>
+    <fragment
         android:id="@+id/navigation_chat1"
         android:name="com.example.prm392app.uiRecruiters.chat.ChatRecruiterFragment"
         android:label="@string/title_chat_recruiter"
-        tools:layout="@layout/activity_chat_recruiter_fragment" />
+        tools:layout="@layout/fragment_chat_recruiter" />
+
 
     <!-- Dashboard Recruiter Fragment -->
     <fragment
