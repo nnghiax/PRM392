@@ -47,7 +47,7 @@ public class RecruiterActivity extends AppCompatActivity {
         // Thiết lập BottomNavigationView
         BottomNavigationView navView = binding.navView1;
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home1, R.id.navigation_dashboard1, R.id.navigation_notifications1, R.id.navigation_chat1)
+                R.id.navigation_home1, R.id.navigation_dashboard1, R.id.navigation_notifications1, R.id.navigation_chat1,R.id.navigation_profile1)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_recruiter);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
