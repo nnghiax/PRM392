@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:width="2dp"
+        android:color="#CCCCCC" /> <!-- Màu viền xám nhạt, có thể thay đổi thành #000000 cho viền đen -->
+    <padding
+        android:left="10dp"
+        android:top="10dp"
+        android:right="10dp"
+        android:bottom="10dp" /> <!-- Khoảng cách bên trong viền -->
+    <corners android:radius="8dp" /> <!-- Bo góc -->
+</shape>

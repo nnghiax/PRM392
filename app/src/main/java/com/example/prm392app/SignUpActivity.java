@@ -83,8 +83,8 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (password.length() < 6) {
-            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        if (!isValidPassword(password)) {
+            Toast.makeText(this, "Password must be at least 6 characters, contain at least 1 uppercase letter, and 1 special character", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -127,6 +127,21 @@ public class SignUpActivity extends AppCompatActivity {
         String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         Pattern pattern = Pattern.compile(emailRegex);
         return pattern.matcher(email).matches();
+    }
+
+    private boolean isValidPassword(String password) {
+        // Check for minimum length of 6
+        if (password.length() < 6) {
+            return false;
+        }
+        // Check for at least 1 uppercase letter
+        Pattern upperCasePattern = Pattern.compile("[A-Z]");
+        if (!upperCasePattern.matcher(password).find()) {
+            return false;
+        }
+        // Check for at least 1 special character
+        Pattern specialCharPattern = Pattern.compile("[!@#$%^&*(),.?\":{}|<>]");
+        return specialCharPattern.matcher(password).find();
     }
 }
 
