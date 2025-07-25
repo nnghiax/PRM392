@@ -2,7 +2,7 @@
 <resources>
 
     <array name="field_options">
-        <item>Tất cả</item>
+        <item>All</item>
         <item>IT</item>
         <item>Marketing</item>
         <item>Tài chính</item>

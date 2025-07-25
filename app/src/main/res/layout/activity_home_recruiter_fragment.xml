@@ -21,9 +21,11 @@
         android:id="@+id/formLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:orientation="vertical"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
@@ -38,25 +40,34 @@
             android:id="@+id/editTextCompanyName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Company Name"
-            android:inputType="text"
-            android:layout_marginTop="8dp" />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/editTextLocationAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Location Address"
-            android:inputType="text"
-            android:layout_marginTop="8dp" />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/editTextDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Duration (e.g., 3 months)"
-            android:inputType="text"
-            android:layout_marginTop="8dp" />
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/text_application_info1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Category"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinnerField"
@@ -69,47 +80,47 @@
             android:id="@+id/editTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Description"
-            android:inputType="textMultiLine"
-            android:layout_marginTop="8dp" />
+            android:inputType="textMultiLine" />
 
         <EditText
             android:id="@+id/editTextRequirements"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Requirements"
-            android:inputType="textMultiLine"
-            android:layout_marginTop="8dp" />
+            android:inputType="textMultiLine" />
 
         <EditText
             android:id="@+id/editTextStipend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Stipend (e.g., 500.0)"
-            android:inputType="numberDecimal"
-            android:layout_marginTop="8dp" />
+            android:inputType="numberDecimal" />
 
         <Button
             android:id="@+id/buttonPickDeadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick Deadline"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:text="Pick Deadline" />
 
         <TextView
             android:id="@+id/textViewDeadline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Selected Deadline"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:hint="Selected Deadline" />
 
         <Button
             android:id="@+id/buttonSaveInterview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save Interview"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:text="Save Interview" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

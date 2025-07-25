@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment implements InternshipAdapter.OnItemCl
     }
 
     private void loadInternships(String field) {
-        Query query = field.equals("Tất cả") ?
+        Query query = field.equals("All") ?
                 db.collection("internships") :
                 db.collection("internships").whereEqualTo("field", field);
 
